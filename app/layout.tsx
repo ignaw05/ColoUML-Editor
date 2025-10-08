@@ -6,7 +6,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'ColoUML Editor',
-  description: 'Created with v0',
+  description: 'Created with v0 and my brain',
   generator: 'v0.app',
 }
 
