@@ -51,7 +51,7 @@ export default function PlantUMLEditor() {
     return () => clearTimeout(timer)
   }, [code])
 
-  // Extract participants and actors from code
+  // Extract participants, actors, and classes from code
   const extractEntities = useCallback((text: string): string[] => {
     const entities = new Set<string>()
     const lines = text.split("\n")
@@ -67,6 +67,30 @@ export default function PlantUMLEditor() {
       const actorMatch = line.match(/actor\s+(?:"([^"]+)"|(\S+))/)
       if (actorMatch) {
         entities.add(actorMatch[1] || actorMatch[2])
+      }
+
+      // Match class Name or class "Name"
+      const classMatch = line.match(/class\s+(?:"([^"]+)"|(\S+))/)
+      if (classMatch) {
+        entities.add(classMatch[1] || classMatch[2])
+      }
+
+      // Match interface Name or interface "Name"
+      const interfaceMatch = line.match(/interface\s+(?:"([^"]+)"|(\S+))/)
+      if (interfaceMatch) {
+        entities.add(interfaceMatch[1] || interfaceMatch[2])
+      }
+
+      // Match abstract class Name or abstract "Name"
+      const abstractMatch = line.match(/abstract\s+(?:class\s+)?(?:"([^"]+)"|(\S+))/)
+      if (abstractMatch) {
+        entities.add(abstractMatch[1] || abstractMatch[2])
+      }
+
+      // Match enum Name or enum "Name"
+      const enumMatch = line.match(/enum\s+(?:"([^"]+)"|(\S+))/)
+      if (enumMatch) {
+        entities.add(enumMatch[1] || enumMatch[2])
       }
     }
 
