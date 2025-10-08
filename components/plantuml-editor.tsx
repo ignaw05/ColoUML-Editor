@@ -10,9 +10,9 @@ import { Toaster } from "@/components/ui/toaster"
 
 const DEFAULT_CODE = `@startuml
 actor Colo
-participant "UIColoPlantUML"
-Colo -> UIColoPlantUML: jaja hice mi editor
-UIColoPlantUML --> Colo
+participant "UIColoUML"
+Colo -> UIColoUML: jaja hice mi editor
+UIColoUML --> Colo
 @enduml`
 
 const STORAGE_KEY = "plantuml-code"
@@ -315,7 +315,7 @@ export default function PlantUMLEditor() {
               <!DOCTYPE html>
               <html>
                 <head>
-                  <title>PlantUML Diagram</title>
+                  <title>ColoUML Diagram</title>
                   <style>
                     body {
                       margin: 0;
@@ -337,7 +337,7 @@ export default function PlantUMLEditor() {
                   </style>
                 </head>
                 <body>
-                  <img id="diagram" src="${data.url}" alt="PlantUML Diagram" />
+                  <img id="diagram" src="${data.url}" alt="ColoUML Diagram" />
                 </body>
               </html>
             `)
@@ -353,7 +353,7 @@ export default function PlantUMLEditor() {
 
         toast({
           title: "Diagrama generado",
-          description: "Tu diagrama PlantUML está listo en la nueva pestaña",
+          description: "Tu diagrama ColoUML está listo en la nueva pestaña",
         })
       } else {
         throw new Error("No se pudo generar la URL")
