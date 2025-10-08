@@ -73,6 +73,59 @@ export default function PlantUMLEditor() {
     return Array.from(entities)
   }, [])
 
+  // Calculate cursor position in textarea
+  const getCursorCoordinates = useCallback((textarea: HTMLTextAreaElement, position: number) => {
+    const div = document.createElement("div")
+    const style = getComputedStyle(textarea)
+    
+    // Copy textarea styles to div
+    ;[
+      "fontFamily",
+      "fontSize",
+      "fontWeight",
+      "letterSpacing",
+      "lineHeight",
+      "padding",
+      "paddingTop",
+      "paddingLeft",
+      "paddingRight",
+      "paddingBottom",
+      "border",
+      "borderWidth",
+      "wordWrap",
+      "whiteSpace",
+    ].forEach((prop) => {
+      div.style[prop as any] = style[prop as any]
+    })
+
+    div.style.position = "absolute"
+    div.style.visibility = "hidden"
+    div.style.width = `${textarea.clientWidth}px`
+    div.style.height = "auto"
+    div.style.overflow = "auto"
+    div.style.whiteSpace = "pre-wrap"
+    div.style.wordWrap = "break-word"
+
+    document.body.appendChild(div)
+
+    const textBeforeCursor = textarea.value.substring(0, position)
+    div.textContent = textBeforeCursor
+
+    const span = document.createElement("span")
+    span.textContent = textarea.value.substring(position) || "."
+    div.appendChild(span)
+
+    const textareaRect = textarea.getBoundingClientRect()
+    const spanRect = span.getBoundingClientRect()
+
+    document.body.removeChild(div)
+
+    return {
+      top: spanRect.top - textareaRect.top + textarea.scrollTop,
+      left: spanRect.left - textareaRect.left + textarea.scrollLeft,
+    }
+  }, [])
+
   // Handle autocomplete
   const handleTextChange = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -115,15 +168,11 @@ export default function PlantUMLEditor() {
             setShowSuggestions(true)
             setSelectedSuggestionIndex(0)
 
-            // Calculate cursor position for suggestions dropdown
-            const lines = textBeforeCursor.split("\n")
-            const currentLine = lines.length
-            const currentColumn = lines[lines.length - 1].length
-
-            // Approximate position (you might need to adjust these values)
+            // Calculate real cursor position
+            const coordinates = getCursorCoordinates(textarea, cursorPos)
             setCursorPosition({
-              top: currentLine * 20 + 60, // Approximate line height
-              left: currentColumn * 8 + 20, // Approximate char width
+              top: coordinates.top + 20, // Add some offset below the cursor
+              left: coordinates.left,
             })
           } else {
             setShowSuggestions(false)
@@ -135,7 +184,7 @@ export default function PlantUMLEditor() {
         setShowSuggestions(false)
       }
     },
-    [extractEntities]
+    [extractEntities, getCursorCoordinates]
   )
 
   // Handle keyboard navigation in suggestions
