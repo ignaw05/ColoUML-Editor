@@ -209,7 +209,7 @@ export default function PlantUMLEditor() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <FileCode2 className="h-6 w-6" />
-              <h1 className="text-xl font-semibold">PlantUML Editor</h1>
+              <h1 className="text-xl font-semibold">ColoUML Editor</h1>
             </div>
             {lastSaved && (
               <span className="text-xs text-muted-foreground">Guardado {lastSaved.toLocaleTimeString()}</span>
